@@ -1,7 +1,7 @@
 package io.alpere.common.crudfop.service;
 
 import com.google.common.base.Joiner;
-import io.alpere.common.crudfop.config.PersistenceConfig;
+import io.alpere.common.crudfop.audit.AuditProvider;
 import io.alpere.common.crudfop.exception.CustomException;
 import io.alpere.common.crudfop.model.BaseEntity;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import static io.alpere.common.crudfop.util.Logging.logInfo;
 @Component
 public class AopLoggingService {
 
-    private final PersistenceConfig.AuditProvider auditorAware;
+    private final AuditProvider auditorAware;
 
     /**
      * Validator/logger for find all methods
