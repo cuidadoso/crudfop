@@ -2,8 +2,8 @@ package io.alpere.common.crudfop.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import io.alpere.common.crudfop.exception.CustomException;
+import io.alpere.common.crudfop.exception.NotFoundException;
 import io.alpere.common.crudfop.model.BaseEntity;
-import io.alpere.common.crudfop.model.QBaseEntity;
 import io.alpere.common.crudfop.model.OrderBy;
 import io.alpere.common.crudfop.repository.BaseRepository;
 import lombok.Getter;
@@ -38,8 +38,11 @@ public abstract class AbstractServiceImpl<Entity extends BaseEntity> implements 
 
     @Override
     public Entity findOne(UUID id) {
-        return repository.findOne(QBaseEntity.baseEntity.id.eq(id))
-                .orElse(null);
+        Entity entity = repository.findById(id).orElse(null);
+        if (entity == null) {
+            throw new NotFoundException(String.format("Entity [%s] with ID: [%s] doesn't exist.", entityClass.getSimpleName(), id));
+        }
+        return entity;
     }
 
     @Override
@@ -63,6 +66,15 @@ public abstract class AbstractServiceImpl<Entity extends BaseEntity> implements 
     @Override
     @Transactional
     public Entity save(Entity entity) {
+        UUID id = entity.getId();
+        if (id == null) {
+            // Save new entity
+            return repository.save(entity);
+        }
+        if (!exists(id)) {
+            throw new NotFoundException(String.format("Entity [%s] with ID: [%s] doesn't exist.", entityClass.getSimpleName(), id));
+        }
+        // Update exist entity
         return repository.save(entity);
     }
 
@@ -76,10 +88,8 @@ public abstract class AbstractServiceImpl<Entity extends BaseEntity> implements 
     @Transactional
     public boolean delete(Entity entity) {
         if (entity != null && exists(entity.getId())) {
-            entity.setUpdatedAt(NOW);
             entity.setDeletedAt(NOW);
             // TODO replace random UUID by registered user UUID from principals
-            entity.setUpdatedBy(ID);
             entity.setDeletedBy(ID);
             repository.save(entity);
             return true;
