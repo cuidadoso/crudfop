@@ -84,7 +84,7 @@ public class AopLoggingService {
 
     private String entityName(final JoinPoint joinPoint) {
         CrudServiceImpl target = (CrudServiceImpl) joinPoint.getTarget();
-        return target.getEntityClass().getName();
+        return target.getEntityClass().getTypeName();
     }
 
     private Long getListCount(final JoinPoint joinPoint) {
