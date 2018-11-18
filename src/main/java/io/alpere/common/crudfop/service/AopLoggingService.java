@@ -2,7 +2,6 @@ package io.alpere.common.crudfop.service;
 
 import com.google.common.base.Joiner;
 import io.alpere.common.crudfop.audit.AuditProvider;
-import io.alpere.common.crudfop.exception.CustomException;
 import io.alpere.common.crudfop.model.BaseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -18,7 +17,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static io.alpere.common.crudfop.util.Logging.logError;
 import static io.alpere.common.crudfop.util.Logging.logInfo;
 
 @Log
@@ -36,10 +34,10 @@ public class AopLoggingService {
      * @param joinPoint Join point object
      */
     @AfterReturning(
-            pointcut = "execution(* io.alpere.common.crudfop.service.AbstractService.findAll(..))"
+            pointcut = "execution(* io.alpere.common.crudfop.service.CrudService.findAll(..))"
     )
     public void onAfterFindAll(final JoinPoint joinPoint) {
-        logInfo("Find all entities of %s. Total count of entities is %d. User: [%s]",
+        logInfo("Find all entities of [%s]. Total count of entities is %d. User: [%s]",
                 entityName(joinPoint), getListCount(joinPoint), auditorAware.user());
     }
 
@@ -50,11 +48,11 @@ public class AopLoggingService {
      * @param entity    Entity.
      */
     @AfterReturning(
-            pointcut = "execution(* io.alpere.common.crudfop.service.AbstractService.findOne(..))",
+            pointcut = "execution(* io.alpere.common.crudfop.service.CrudService.findOne(..))",
             returning = "entity"
     )
     public void onAfterFindOne(final JoinPoint joinPoint, final BaseEntity entity) {
-        logInfo("Find one entity %s with id [%d]. User: [%s]",
+        logInfo("Find one entity [%s] with id [%d]. User: [%s]",
                 entityName(joinPoint), entity.getId(), auditorAware.user());
     }
 
@@ -64,11 +62,11 @@ public class AopLoggingService {
      * @param joinPoint Join point object
      */
     @AfterReturning(
-            pointcut = "execution(* io.alpere.common.crudfop.service.AbstractService.save(..))"
+            pointcut = "execution(* io.alpere.common.crudfop.service.CrudService.save(..))"
     )
     public void onAfterSave(final JoinPoint joinPoint) {
-        logInfo("Save entity/entities with ID/IDs [%s]. User: [%s]",
-                convertArguments(joinPoint), auditorAware.user());
+        logInfo("Save/update entity/entities [%s] with ID/IDs [%s]. User: [%s]",
+                entityName(joinPoint), convertArguments(joinPoint), auditorAware.user());
     }
 
     /**
@@ -77,21 +75,16 @@ public class AopLoggingService {
      * @param joinPoint Join point object
      */
     @AfterReturning(
-            pointcut = "execution(* io.alpere.common.crudfop.service.AbstractService.delete(..))"
+            pointcut = "execution(* io.alpere.common.crudfop.service.CrudService.delete(..))"
     )
     public void onAfterDelete(final JoinPoint joinPoint) {
-        logInfo("Delete entity/entities with ID/IDs [%s]. User: [%s]",
-                convertArguments(joinPoint), auditorAware.user());
+        logInfo("Delete entity/entities [%s] with ID/IDs [%s]. User: [%s]",
+                entityName(joinPoint), convertArguments(joinPoint), auditorAware.user());
     }
 
     private String entityName(final JoinPoint joinPoint) {
-        AbstractServiceImpl target = (AbstractServiceImpl) joinPoint.getTarget();
-        try {
-            return target.getEntityClass().getDeclaredField("entityClass").getName();
-        } catch (NoSuchFieldException e) {
-            logError("AbstractServiceImpl doesn't have field entityClass. It is imposable!");
-            throw new CustomException("Entity [%s] doesn't have field entityClass.");
-        }
+        CrudServiceImpl target = (CrudServiceImpl) joinPoint.getTarget();
+        return target.getEntityClass().getName();
     }
 
     private Long getListCount(final JoinPoint joinPoint) {

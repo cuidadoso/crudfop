@@ -27,11 +27,11 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Getter
-public abstract class AbstractServiceImpl<Entity extends BaseEntity> implements AbstractService<Entity> {
+public abstract class CrudServiceImpl<Entity extends BaseEntity> implements CrudService<Entity> {
     protected final BaseRepository<Entity> repository;
     protected final Class entityClass;
 
-    protected AbstractServiceImpl(BaseRepository<Entity> repository, Class entityClass) {
+    protected CrudServiceImpl(BaseRepository<Entity> repository, Class entityClass) {
         this.repository = repository;
         this.entityClass = entityClass;
     }
