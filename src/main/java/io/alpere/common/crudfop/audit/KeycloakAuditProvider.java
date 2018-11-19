@@ -10,29 +10,42 @@ import static io.alpere.common.crudfop.util.Logging.logError;
 
 public class KeycloakAuditProvider implements AuditProvider {
     @Override
+    public String id() {
+        KeycloakPrincipal principal = (KeycloakPrincipal) getAuthentication().orElse(null);
+        if (principal == null) {
+            return null;
+        }
+        return principal.getKeycloakSecurityContext().getToken().getSubject();
+    }
+
+    @Override
     public String user() {
-        KeycloakPrincipal principal = (KeycloakPrincipal) getCurrentAuditor().orElse(null);
+        KeycloakPrincipal principal = (KeycloakPrincipal) getAuthentication().orElse(null);
         if (principal == null) {
             return "unknown user";
         }
         return principal.getKeycloakSecurityContext().getToken().getPreferredUsername();
     }
 
-    @Override
     public String email() {
-        KeycloakPrincipal principal = (KeycloakPrincipal) getCurrentAuditor().orElse(null);
+        KeycloakPrincipal principal = (KeycloakPrincipal) getAuthentication().orElse(null);
         if (principal == null) {
             return "unknown email";
         }
         return principal.getKeycloakSecurityContext().getToken().getEmail();
     }
 
+
     @Override
-    public Optional<Object> getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
+        return Optional.of(id());
+    }
+
+    private Optional<Object> getAuthentication() {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()) {
-                return Optional.of("unauthorized");
+                return Optional.empty();
             }
 
             Object principal = authentication.getPrincipal();
@@ -45,7 +58,6 @@ public class KeycloakAuditProvider implements AuditProvider {
         } catch (Exception e) {
             logError("Не удалось разобрать токен. {}", e);
         }
-
         return Optional.empty();
     }
 }

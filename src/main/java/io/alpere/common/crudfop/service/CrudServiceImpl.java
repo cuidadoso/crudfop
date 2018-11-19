@@ -1,6 +1,7 @@
 package io.alpere.common.crudfop.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import io.alpere.common.crudfop.audit.AuditProvider;
 import io.alpere.common.crudfop.exception.CustomException;
 import io.alpere.common.crudfop.exception.NotFoundException;
 import io.alpere.common.crudfop.model.BaseEntity;
@@ -20,7 +21,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static io.alpere.common.crudfop.util.Constants.ID;
 import static io.alpere.common.crudfop.util.Constants.NOW;
 import static io.alpere.common.crudfop.util.Logging.logError;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -29,11 +29,14 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @Getter
 public abstract class CrudServiceImpl<Entity extends BaseEntity> implements CrudService<Entity> {
     protected final BaseRepository<Entity> repository;
+    private final AuditProvider auditorAware;
     protected final Class entityClass;
 
-    protected CrudServiceImpl(BaseRepository<Entity> repository, Class entityClass) {
+    protected CrudServiceImpl(BaseRepository<Entity> repository, AuditProvider auditProvider, Class entityClass) {
         this.repository = repository;
+        this.auditorAware = auditProvider;
         this.entityClass = entityClass;
+
     }
 
     @Override
@@ -89,8 +92,7 @@ public abstract class CrudServiceImpl<Entity extends BaseEntity> implements Crud
     public boolean delete(Entity entity) {
         if (entity != null && exists(entity.getId())) {
             entity.setDeletedAt(NOW);
-            // TODO replace random UUID by registered user UUID from principals
-            entity.setDeletedBy(ID);
+            entity.setDeletedBy(UUID.fromString(auditorAware.id()));
             repository.save(entity);
             return true;
         }
