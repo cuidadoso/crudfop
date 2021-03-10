@@ -1,8 +1,8 @@
-package io.alpere.common.crudfop.service;
+package io.alpere.crudfop.service;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import io.alpere.common.crudfop.model.OrderBy;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort.Order;
 
 import java.util.List;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public interface CrudService<Entity> {
      * @param size      page size
      * @return page of entities
      */
-    Page<Entity> findAll(BooleanExpression predicate, List<OrderBy> orders, int page, int size);
+    Page<Entity> page(BooleanExpression predicate, List<Order> orders, int page, int size);
 
     /**
      * Create/update entity
@@ -59,28 +59,62 @@ public interface CrudService<Entity> {
     List<Entity> save(Iterable<Entity> entities);
 
     /**
+     * Delete entity to archive
+     *
+     * @param entity entity to delete
+     * @return entity deleted to archive
+     */
+    Entity softDelete(Entity entity);
+
+    /**
      * Delete entity
      *
      * @param entity entity to delete
-     * @return true or false
      */
-    boolean delete(Entity entity);
+    void delete(Entity entity);
+
+    /**
+     * Delete entity to archive
+     *
+     * @param id id of entity to delete
+     * @return entity deleted to archive
+     */
+    Entity softDelete(UUID id);
 
     /**
      * Delete entity
      *
      * @param id id of entity to delete
-     * @return true or false
      */
-    boolean delete(UUID id);
+    void delete(UUID id);
+
+    /**
+     * Delete entities to archive
+     *
+     * @param entities list of entities
+     */
+    void softDelete(Iterable<Entity> entities);
 
     /**
      * Delete entities
      *
      * @param entities list of entities
-     * @return true or false
      */
-    boolean delete(Iterable<Entity> entities);
+    void delete(Iterable<Entity> entities);
+
+    /**
+     * Delete entities to archive
+     *
+     * @param ids list of entities ids
+     */
+    void softDeleteAll(Iterable<UUID> ids);
+
+    /**
+     * Delete entities
+     *
+     * @param ids list of entities ids
+     */
+    void deleteAll(Iterable<UUID> ids);
 
     /**
      * Entity with specified id is exist?
@@ -89,4 +123,5 @@ public interface CrudService<Entity> {
      * @return true or false
      */
     boolean exists(UUID id);
+
 }

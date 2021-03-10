@@ -1,7 +1,7 @@
-package io.alpere.common.crudfop.repository;
+package io.alpere.crudfop.repository;
 
 
-import io.alpere.common.crudfop.model.BaseEntity;
+import io.alpere.crudfop.model.BaseEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
