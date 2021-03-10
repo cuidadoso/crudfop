@@ -6,7 +6,7 @@
 
     <groupId>io.alpere.common</groupId>
     <artifactId>crudfop</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>crudfop</name>
