@@ -13,19 +13,22 @@ buildscript {
 }
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'idea'
     id 'jacoco'
     id 'maven'
     id 'org.springframework.boot' version '2.4.3'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
 group = 'io.alpere.crudfop'
 version = '2.0.2-SNAPHOT'
 description = 'crudfop'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
