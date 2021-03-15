@@ -1,19 +1,27 @@
-package io.alpere.common.crudfop.model;
+package io.alpere.crudfop.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 
 @Getter
 @Setter
-@ToString(of = "id")
 @EqualsAndHashCode(of = {"id"})
 @NoArgsConstructor
 @MappedSuperclass
@@ -26,26 +34,26 @@ public abstract class BaseEntity {
 
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
-    protected UUID createdBy;
+    protected String createdBy;
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    protected ZonedDateTime createdAt;
+    protected Instant createdAt;
 
     @LastModifiedBy
     @Column(name = "updated_by", nullable = false)
-    protected UUID updatedBy;
+    protected String updatedBy;
 
     @Version
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private ZonedDateTime updatedAt;
+    private Instant updatedAt;
 
 
     @Column(name = "deleted_by")
-    protected UUID deletedBy;
+    protected String deletedBy;
 
     @Column(name = "deleted_at")
-    private ZonedDateTime deletedAt;
+    private Instant deletedAt;
 
 }

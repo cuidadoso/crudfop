@@ -21,3 +21,9 @@ hs_err_pid*
 *.iml
 *.iws
 
+#gradle
+.gradle
+**/build/
+**/.build/
+!gradle/wrapper/gradle-wrapper.jar
+
