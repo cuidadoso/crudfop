@@ -27,7 +27,7 @@ java {
 }
 
 group = 'io.alpere.crudfop'
-version = '2.0.2-SNAPHOT'
+version = '2.0.2'
 description = 'crudfop'
 
 repositories {
