@@ -21,7 +21,7 @@ plugins {
 }
 
 group = 'io.alpere.crudfop'
-version = '2.0'
+version = '2.0.1'
 description = 'crudfop'
 
 sourceCompatibility = 1.8
