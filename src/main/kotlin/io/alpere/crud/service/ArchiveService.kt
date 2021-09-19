@@ -1,25 +1,23 @@
-package io.alpere.crudfop.service;
+package io.alpere.crud.service
 
-import java.util.List;
-import java.util.UUID;
+import com.querydsl.core.types.dsl.BooleanExpression
+import java.util.*
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-
-public interface ArchiveService<ArchivedEntity> {
+interface ArchiveService<ArchivedEntity> {
     /**
      * Get one entity by id
      *
      * @param id UUID of entity
      * @return one entity instance
      */
-    ArchivedEntity findOne(UUID id);
+    fun findOne(id: UUID?): ArchivedEntity
 
     /**
      * Get all entities
      *
      * @return list of archived entities
      */
-    List<ArchivedEntity> findAll();
+    fun findAll(): List<ArchivedEntity>?
 
     /**
      * Get filtered entities
@@ -27,14 +25,14 @@ public interface ArchiveService<ArchivedEntity> {
      * @param predicate BooleanExpression
      * @return list of entities
      */
-    List<ArchivedEntity> findAll(BooleanExpression predicate);
+    fun findAll(predicate: BooleanExpression?): List<ArchivedEntity>?
 
     /**
      * Restore entity from archive
      *
      * @return entity restored from archive
      */
-    ArchivedEntity restore(ArchivedEntity archivedEntity);
+    fun restore(archivedEntity: ArchivedEntity?): ArchivedEntity
 
     /**
      * Restore entity from archive
@@ -42,21 +40,21 @@ public interface ArchiveService<ArchivedEntity> {
      * @param id id of entity to restore
      * @return entity restored from archive
      */
-    ArchivedEntity restore(UUID id);
+    fun restore(id: UUID?): ArchivedEntity
 
     /**
      * Restore entities from archive
      *
      * @param archivedEntities list of entities
      */
-    void restore(Iterable<ArchivedEntity> archivedEntities);
+    fun restore(archivedEntities: Iterable<ArchivedEntity?>?)
 
     /**
      * Restore entities from archive
      *
      * @param ids list of entities ids
      */
-    void restoreAll(Iterable<UUID> ids);
+    fun restoreAll(ids: Iterable<UUID?>?)
 
 
     /**
@@ -64,27 +62,35 @@ public interface ArchiveService<ArchivedEntity> {
      *
      * @param archivedEntity entity to delete
      */
-    void delete(ArchivedEntity archivedEntity);
+    fun delete(archivedEntity: ArchivedEntity?)
 
     /**
      * Delete archived entity
      *
      * @param id id of archived entity to delete
      */
-    void delete(UUID id);
+    fun delete(id: UUID?)
 
     /**
      * Delete archived entities
      *
      * @param archivedEntities list of entities
      */
-    void delete(Iterable<ArchivedEntity> archivedEntities);
+    fun delete(archivedEntities: Iterable<ArchivedEntity?>?)
 
     /**
      * Delete archived entities
      *
      * @param ids list of archived entities ids
      */
-    void deleteAll(Iterable<UUID> ids);
+    fun deleteAll(ids: Iterable<UUID?>?)
+
+    /**
+     * Entity with specified id is exists?
+     *
+     * @param id id of entity to check
+     * @return true or false
+     */
+    fun exists(id: UUID?): Boolean
 
 }

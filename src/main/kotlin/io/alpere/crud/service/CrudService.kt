@@ -1,27 +1,25 @@
-package io.alpere.crudfop.service;
+package io.alpere.crud.service
 
-import com.querydsl.core.types.dsl.BooleanExpression;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort.Order;
+import com.querydsl.core.types.dsl.BooleanExpression
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Sort.Order
+import java.util.*
 
-import java.util.List;
-import java.util.UUID;
-
-public interface CrudService<Entity> {
+interface CrudService<Entity> {
     /**
      * Get one entity by id
      *
      * @param id UUID of entity
      * @return one entity instance
      */
-    Entity findOne(UUID id);
+    fun findOne(id: UUID?): Entity
 
     /**
      * Get all entities
      *
      * @return list of entities
      */
-    List<Entity> findAll();
+    fun findAll(): List<Entity>
 
     /**
      * Get filtered entities
@@ -29,7 +27,7 @@ public interface CrudService<Entity> {
      * @param predicate BooleanExpression
      * @return list of entities
      */
-    List<Entity> findAll(BooleanExpression predicate);
+    fun findAll(predicate: BooleanExpression?): List<Entity>
 
     /**
      * Get filtered and ordered page of entities
@@ -40,7 +38,7 @@ public interface CrudService<Entity> {
      * @param size      page size
      * @return page of entities
      */
-    Page<Entity> page(BooleanExpression predicate, List<Order> orders, int page, int size);
+    fun page(predicate: BooleanExpression?, orders: List<Order>?, page: Int, size: Int): Page<Entity>
 
     /**
      * Create/update entity
@@ -48,7 +46,7 @@ public interface CrudService<Entity> {
      * @param entity entity to create/update
      * @return entity
      */
-    Entity save(Entity entity);
+    fun save(entity: Entity?): Entity
 
     /**
      * Create/update list of entities
@@ -56,7 +54,7 @@ public interface CrudService<Entity> {
      * @param entities list of entities
      * @return list of entity
      */
-    List<Entity> save(Iterable<Entity> entities);
+    fun save(entities: Iterable<Entity?>?): List<Entity>
 
     /**
      * Delete entity to archive
@@ -64,14 +62,14 @@ public interface CrudService<Entity> {
      * @param entity entity to delete
      * @return entity deleted to archive
      */
-    Entity softDelete(Entity entity);
+    fun softDelete(entity: Entity?): Entity
 
     /**
      * Delete entity
      *
      * @param entity entity to delete
      */
-    void delete(Entity entity);
+    fun delete(entity: Entity?)
 
     /**
      * Delete entity to archive
@@ -79,49 +77,49 @@ public interface CrudService<Entity> {
      * @param id id of entity to delete
      * @return entity deleted to archive
      */
-    Entity softDelete(UUID id);
+    fun softDelete(id: UUID?): Entity
 
     /**
      * Delete entity
      *
      * @param id id of entity to delete
      */
-    void delete(UUID id);
+    fun delete(id: UUID?)
 
     /**
      * Delete entities to archive
      *
      * @param entities list of entities
      */
-    void softDelete(Iterable<Entity> entities);
+    fun softDelete(entities: Iterable<Entity?>?)
 
     /**
      * Delete entities
      *
      * @param entities list of entities
      */
-    void delete(Iterable<Entity> entities);
+    fun delete(entities: Iterable<Entity?>?)
 
     /**
      * Delete entities to archive
      *
      * @param ids list of entities ids
      */
-    void softDeleteAll(Iterable<UUID> ids);
+    fun softDeleteAll(ids: Iterable<UUID?>?)
 
     /**
      * Delete entities
      *
      * @param ids list of entities ids
      */
-    void deleteAll(Iterable<UUID> ids);
+    fun deleteAll(ids: Iterable<UUID?>?)
 
     /**
-     * Entity with specified id is exist?
+     * Entity with specified id is exists?
      *
      * @param id id of entity to check
      * @return true or false
      */
-    boolean exists(UUID id);
+    fun exists(id: UUID?): Boolean
 
 }

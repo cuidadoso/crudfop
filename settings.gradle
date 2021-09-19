@@ -1,7 +1,2 @@
-pluginManagement {
-    repositories {
-        mavenCentral()
-    }
-}
 
 rootProject.name = 'crudfop'
